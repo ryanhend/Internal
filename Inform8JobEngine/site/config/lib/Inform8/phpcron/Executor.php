@@ -20,11 +20,11 @@ class Executor {
 	/**
 	 * Call this function to execute job.
 	 * 
-	 * @return TaskResponse response an object containing http response code
+	 * @return TaskResponse response - an object containing http response code
 	 * 			status and the response string returned from job server.
 	 */
 	public function run() {
-
+				
 		// Update 'LastExecution' time for this job.
 		$this->updateJob();
 		

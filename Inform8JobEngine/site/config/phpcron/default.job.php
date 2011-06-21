@@ -1,5 +1,5 @@
 <?php
 
-// Output from page is emailed to the address specified in Job table:
+// All output from this page gets sent to email address specified in Job table
 
-print "This is the default job.";
+print "Default job completed successfully.";

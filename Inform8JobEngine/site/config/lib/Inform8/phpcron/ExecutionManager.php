@@ -31,11 +31,11 @@ class ExecutionManager {
 		
 		foreach ($jobs as $job) {
 
-			// Execute a job.
+			// TODO Should jobs be locked prior to running them?
+
 			$executor = new Executor($job);
 			$response = $executor->run();
 
-			// notify the admin.
 			$this->notify($job, $response);
 		}
 	}
@@ -54,7 +54,6 @@ class ExecutionManager {
 
 			$subject = "Job notification";
 			
-			// Job server uncontactable?
 			if ($response->http_code() == 0) {
 				$subject .= ": ERROR - UNABLE TO CONTACT JOB SERVER";
 			}

@@ -98,7 +98,7 @@ CREATE TABLE `JobHistory` (
   `JobInfo` varchar(255) NOT NULL,
   `StartTime` datetime NOT NULL,
   `FinishTime` datetime NOT NULL,
-  `HttpStatus` mediumint(8) unsigned NOT NULL,
+  `HttpCode` mediumint(8) unsigned NOT NULL,
   `Message` text,
   PRIMARY KEY (`JobHistoryId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

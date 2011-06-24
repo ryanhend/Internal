@@ -39,6 +39,7 @@ class ExecutionManager {
 			$finish = date( 'Y-m-d H:i:s', time() );			
 			
 			$this->addJobToHistory($job, $response, $start, $finish);
+			
 			$this->sendNotifications($job, $response, $start, $finish);
 		}
 	}
@@ -79,7 +80,7 @@ class ExecutionManager {
 	}
 
 	/**
-	 * Helper function: Enter description here ...
+	 * Helper function: Add job to history table in db
 	 *  
 	 * @param Job $job
 	 * @param JobResponse $response
@@ -88,29 +89,19 @@ class ExecutionManager {
 	 */
 	private function addJobToHistory(Job $job, JobResponse $response, $start, $finish) {
 	
-		// TODO add new entry to JobHistory table
-		
-		
+		$history = new JobHistory();
+		$history->setJobInfo($this->jobInfoToString($job, $response, $start, $finish));
+		$history->setStartTime($start);
+		$history->setFinishTime($finish);
+		$history->setHttpCode($response->http_code());
+		$history->setMessage($response->message());
 		$dao = new JobHistoryDao();
-
-		
-		//$dao = new JobDao();
-		//$this->job->setLastExecution($now);
-		//$dao->save($this->job);
-
-		
-		
-		
-		
-		
-		
-		
-	
+		$dao->create($history);
 	}
 	
 	/**
 	 * Helper function: convert Job, Job Response and start/ finish times to string
-	 *  format for emailing & stashing in job history table.
+	 *  format for emailing & stashing in job history db table.
 	 * 
 	 * @param Job $job
 	 * @param String $start
@@ -126,7 +117,6 @@ class ExecutionManager {
 			"Delay: " . $job->getDelay() . "\n" .
 	 		"Job started: " . $start . "\n" .
 	 		"Job finished: " . $finish . "\n" .
-			
 	 		"JOB SERVER RESPONSE:\n" .
 	 		"Http response status: " . $response->http_code() . "\n" . 
 	 		"Message: " . $response->message() . "\n"; 

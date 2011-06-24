@@ -26,7 +26,7 @@ class Executor {
 	public function run() {
 				
 		// Update 'LastExecution' time for this job.
-		$this->updateJob();
+		$this->updateLastExecutionTime();
 		
 		// Execute the job by calling its url.
 		$ch = curl_init();
@@ -45,12 +45,12 @@ class Executor {
 	/**
 	 * Helper function: updates 'LastExecution' value in database for this job.
 	 */
-	private function updateJob() {
+	private function updateLastExecutionTime() {
 		
 		// Use php time (in case it differs from time on the db server)
-		$phpNow = date( 'Y-m-d H:i:s', time() );
+		$now = date( 'Y-m-d H:i:s', time() );
 		$dao = new JobDao();
-		$this->job->setLastExecution($phpNow);
+		$this->job->setLastExecution($now);
 		$dao->save($this->job);
 	}	
 }

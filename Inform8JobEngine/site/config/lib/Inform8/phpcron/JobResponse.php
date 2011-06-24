@@ -10,7 +10,7 @@ class JobResponse {
 	private $http_code;
 	
 	/** The response string received from Job server */
-	private $html;
+	private $message;
 
 	/**
 	 * Constructor.
@@ -19,9 +19,9 @@ class JobResponse {
 	 * @param String - the response string received from the job server.
 	 * 
 	 */
-	public function __construct($http_code, $html) {
+	public function __construct($http_code, $message) {
 		$this->http_code = $http_code;
-		$this->html = $html;
+		$this->message = $message;
 	}
 
 	/**
@@ -40,7 +40,7 @@ class JobResponse {
 	 *
 	 * @return String - the response string sent by Job server.
 	 */
-	public function html() {
-		return $this->html;
+	public function message() {
+		return $this->message;
 	}
 }

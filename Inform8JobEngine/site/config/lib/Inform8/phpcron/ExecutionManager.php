@@ -11,7 +11,7 @@ class ExecutionManager {
 	/**
 	 * Constructor.
 	 * 
-	 * @param JobFinder $jobFinder 
+	 * @param JobFinder $jobFinder - an object that implements the JobFinder interface.
 	 * 
 	 */
 	public function __construct(JobFinder $jobFinder) {
@@ -33,51 +33,104 @@ class ExecutionManager {
 
 			// TODO Should jobs be locked prior to running them?
 
+			$start = date( 'Y-m-d H:i:s', time() );			
 			$executor = new Executor($job);
 			$response = $executor->run();
-
-			$this->notify($job, $response);
+			$finish = date( 'Y-m-d H:i:s', time() );			
+			
+			$this->addJobToHistory($job, $response, $start, $finish);
+			$this->sendNotifications($job, $response, $start, $finish);
 		}
 	}
-	
+
 	/**
-	 * Helper function: send an email about job to administrator.
+	 * Helper function: email job response to administrator.
 	 * 
 	 * @param Job $job
 	 * @param JobResponse $response
 	 */
-	private function notify(Job $job, JobResponse $response) {
+	private function sendNotifications(Job $job, JobResponse $response, $start, $finish) {
 
 		if ( $job->getEmail() != "" ) {
 
 			$to = $job->getEmail();
 
-			$subject = "Job notification";
+			$subject = "JOB STATUS: " . $job->getJobName();
 			
 			if ($response->http_code() == 0) {
 				$subject .= ": ERROR - UNABLE TO CONTACT JOB SERVER";
 			}
 			
-			$body = "Job details:\n\n" .
-			  		"Job id: " . $job->getJobId() . "\n" .
-					"Job url: " . $job->getUrl() . "\n" .
-			  		"Timeout: " . $job->getTimeout(). "\n" .
-					"Delay: " . $job->getDelay() . "\n" .
-			 		"Execution time: " . $job->getLastExecution() . "\n\n" .
-			 		"Job response:\n\n" .
-			 		"HTTP response status code: " . $response->http_code() . "\n" . 
-			 		"Message received from job server:\n" .
-			 		$response->html() . "\n"; 
-			 		
-			// TODO: Uncomment this
-			//$mailer = new SimpleMailer();
-			//$mailer->sendPlainTextEmail($to, $subject, $body);
-			 		
-			// TODO: DELETE THIS
+			$body = $this->jobInfoToString($job, $response, $start, $finish); 
+			
+			// TODO: Delete following 7 lines
 			print "To: " . $to . "<br />";
 			print "Subject: " . $subject . "<br />";
-			print "Body: <br />" . $body . "<br /><br />";
+			$body = explode ("\n", $body);
+			foreach ($body as $line) {
+				print "$line<br />";
+			}
+			print "<br />";
 			
+			// TODO: Uncomment next 2 lines
+			//$mailer = new SimpleMailer();
+			//$mailer->sendPlainTextEmail($to, $subject, $body);
 		}		
+	}
+
+	/**
+	 * Helper function: Enter description here ...
+	 *  
+	 * @param Job $job
+	 * @param JobResponse $response
+	 * @param String $start
+	 * @param String $finish
+	 */
+	private function addJobToHistory(Job $job, JobResponse $response, $start, $finish) {
+	
+		// TODO add new entry to JobHistory table
+		
+		
+		$dao = new JobHistoryDao();
+
+		
+		//$dao = new JobDao();
+		//$this->job->setLastExecution($now);
+		//$dao->save($this->job);
+
+		
+		
+		
+		
+		
+		
+		
+	
+	}
+	
+	/**
+	 * Helper function: convert Job, Job Response and start/ finish times to string
+	 *  format for emailing & stashing in job history table.
+	 * 
+	 * @param Job $job
+	 * @param String $start
+	 * @param String $finish
+	 */
+	private function jobInfoToString(Job $job, JobResponse $response, $start, $finish) {
+		
+		$string = 
+			"Job url: " . $job->getUrl() . "\n" .
+	  		"Job name: " . $job->getJobName() . "\n" .
+	  		"Job id: " . $job->getJobId() . "\n" .
+			"Timeout: " . $job->getTimeout(). "\n" .
+			"Delay: " . $job->getDelay() . "\n" .
+	 		"Job started: " . $start . "\n" .
+	 		"Job finished: " . $finish . "\n" .
+			
+	 		"JOB SERVER RESPONSE:\n" .
+	 		"Http response status: " . $response->http_code() . "\n" . 
+	 		"Message: " . $response->message() . "\n"; 
+
+		return $string;
 	}
 }

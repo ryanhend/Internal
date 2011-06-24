@@ -77,11 +77,12 @@ CREATE TABLE  `User` (
 INSERT into `User`(Enabled, Firstname, Lastname, UserLevel, Username, Password) values(1, 'Ryan', 'Henderson', 'Admin', 'test', '098f6bcd4621d373cade4e832627b4f6');
 
 --  ====================================== 
---  Task table.
+--  Table for the Job manager
 --  ======================================
 
 CREATE TABLE `Job` (
   `JobId` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `JobName` varchar(255) NOT NULL,
   `CreationTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `LastExecution` datetime NOT NULL DEFAULT '1999-01-01 00:00:00',
   `Timeout` mediumint(8) unsigned NOT NULL,
@@ -91,12 +92,24 @@ CREATE TABLE `Job` (
   PRIMARY KEY (`JobId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `JobHistory` (
+  `JobHistoryId` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `CreationTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `JobInfo` varchar(255) NOT NULL,
+  `StartTime` datetime NOT NULL,
+  `FinishTime` datetime NOT NULL,
+  `HttpStatus` mediumint(8) unsigned NOT NULL,
+  `Message` text,
+  PRIMARY KEY (`JobHistoryId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --  ====================================== 
 --  Default phpcron job
+--   - job name
 --	 - timeout 
 --	 - delay
 --	 - email address (can be NULL)
 --	 - url
 --  ======================================
-INSERT INTO `Job` (`Timeout`,`Delay`,`Email`,`Url`)
-VALUES (30, 3600, 'email@address.com', 'http://localhost:8888/jobs.php?job=default');
+INSERT INTO `Job` (`JobName`,`Timeout`,`Delay`,`Email`,`Url`)
+VALUES ('Default job', 30, 3600, 'email@address.com', 'http://localhost:8888/jobs.php?job=default');

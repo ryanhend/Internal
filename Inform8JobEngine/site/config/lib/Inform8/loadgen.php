@@ -55,6 +55,20 @@ $classLookup = Inform8Context::getClassRegistry();
 	$classLookup->registerClass('JobUpdateTransaction', 'config/lib/Inform8/transact/JobUpdateTransaction.php');
 
 
+	$classLookup->registerClass('JobHistoryDao', 'config/lib/Inform8/dao/JobHistoryDao.php');
+	
+	$classLookup->registerClass('JobHistoryData', 'config/lib/Inform8/do/JobHistoryDataClass.php');
+	$classLookup->registerClass('JobHistory', 'config/lib/Inform8/bo/JobHistoryClass.php');
+	
+	$classLookup->registerClass('JobHistoryJsonBuilder', 'config/lib/Inform8/json/JobHistoryJsonBuilder.php');
+	$classLookup->registerClass('JobHistoryXmlBuilder', 'config/lib/Inform8/xml/JobHistoryXmlBuilder.php');
+	
+	$classLookup->registerClass('JobHistoryIQL', 'config/lib/Inform8/iql/JobHistoryIQL.php');
+															 
+	$classLookup->registerClass('JobHistoryCreateTransaction', 'config/lib/Inform8/transact/JobHistoryCreateTransaction.php');
+	$classLookup->registerClass('JobHistoryUpdateTransaction', 'config/lib/Inform8/transact/JobHistoryUpdateTransaction.php');
+
+
 	$classLookup->registerClass('TemplateFileDao', 'config/lib/Inform8/dao/TemplateFileDao.php');
 	
 	$classLookup->registerClass('TemplateFileData', 'config/lib/Inform8/do/TemplateFileDataClass.php');

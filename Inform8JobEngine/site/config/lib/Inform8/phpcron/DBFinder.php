@@ -18,8 +18,8 @@ class DBFinder implements JobFinder {
 		$dao = new JobDao();
 
 		// Use php time (in case it differs from time on the db server)
-		$phpNow = date('Y-m-d H:i:s', time());
-		$tasks = $dao->getWithSql("SELECT * FROM Job WHERE '$phpNow' > ( `LastExecution` + INTERVAL `Delay` SECOND )", false);
+		$now = date('Y-m-d H:i:s', time());
+		$tasks = $dao->getWithSql("SELECT * FROM Job WHERE '$now' > ( `LastExecution` + INTERVAL `Delay` SECOND )", false);
 
 		return $tasks;
 	}	
